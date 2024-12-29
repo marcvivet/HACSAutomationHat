@@ -10,5 +10,6 @@
   "requirements": ["automationhat"],
   "ssdp": [],
   "version": "0.1.0",
-  "zeroconf": []
+  "zeroconf": [],
+  "icon": "icons/icon.png"
 }
