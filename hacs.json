@@ -1,0 +1,6 @@
+{
+    "name": "Automation Hat",
+    "render_readme": true,
+    "homeassistant": "2023.11.3",
+    "hacs": "1.33.0"   
+}
