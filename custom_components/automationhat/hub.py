@@ -73,6 +73,14 @@ class AutomationHat:
         self._relay_state[number] = True
         await self.publish_updates()
 
+    async def get_relay_state(self, number) -> bool:
+        """
+        Set dummy cover to the given position.
+
+        State is announced a random number of seconds later.
+        """
+        return self._relay_state[number]
+
     async def set_relay_off(self, number) -> None:
         """Publish updates, with a random delay to emulate interaction with device."""
         self._relay_state[number] = False
