@@ -85,3 +85,8 @@ class RelaySwitch(SwitchEntity, RestoreEntity):
     def available(self) -> bool:
         """Return True if the device and hub are available."""
         return self._device.online and self._device.hub.online
+    
+    @property
+    def device_info(self):
+        """Return information to link this entity with the correct device."""
+        return {"identifiers": {(DOMAIN, self._device._id)}}
