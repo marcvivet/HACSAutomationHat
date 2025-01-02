@@ -4,6 +4,7 @@ from homeassistant.components.switch import SwitchEntity
 
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
+from homeassistant.helpers.entity import RestoreEntity
 
 import automationhat as ah
 
@@ -24,82 +25,63 @@ async def async_setup_entry(
         RelaySwitch(hub.automationhat, "three")])
 
 
-class RelaySwitch(SwitchEntity):
-    """Representation of a sensor."""
+class RelaySwitch(SwitchEntity, RestoreEntity):
+    """Representation of a relay switch."""
 
     def __init__(self, device, number) -> None:
-        """Initialize the sensor."""
-        self._state = False
+        """Initialize the switch."""
+        self._state = None  # Use None to handle initial unknown state
         self._device = device
         self._number = number
         self._attr_unique_id = f"{self._device._id}_switch_{number}"
-        self._attr_name = f"Switch {number}"
+        self._attr_name = f"Relay {number}"
 
     @property
     def icon(self) -> str | None:
         """Icon of the entity."""
-        if self._state:
-            return "mdi:toggle-switch-variant"
-        return "mdi:toggle-switch-variant-off"
+        return "mdi:toggle-switch-variant" if self.is_on else "mdi:toggle-switch-variant-off"
 
     @property
     def is_on(self):
-        """Return is_on status."""
+        """Return the on/off state."""
         return self._state
 
     async def async_turn_on(self):
-        """Turn On method."""
+        """Turn the switch on."""
         relay = getattr(ah.relay, self._number)
-        self._state = True
         await self._device.set_relay_on(self._number)
         await to_thread(relay.on)
+        self._state = True
+        self.async_write_ha_state()
 
     async def async_turn_off(self):
-        """Turn Off method."""
+        """Turn the switch off."""
         relay = getattr(ah.relay, self._number)
-        self._state = False
         await self._device.set_relay_off(self._number)
         await to_thread(relay.off)
-        await to_thread(relay.light_no.write, 1)
-        await to_thread(relay.light_nc.write, 0)
-
-    @property
-    def should_poll(self):
-        """No polling needed."""
-        return False
+        self._state = False
+        self.async_write_ha_state()
 
     async def async_update(self):
-        """Return sensor state."""
-        return self._state
-
-    @property
-    def name(self) -> str:
-        """Return the name of the sensor."""
-        return self._attr_name
-
-    @property
-    def state(self):
-        """Return the state of the sensor."""
-        return self._state
-
-    @property
-    def device_info(self):
-        """Return information to link this entity with the correct device."""
-        return {"identifiers": {(DOMAIN, self._device._id)}}
-
-    # This property is important to let HA know if this entity is online or not.
-    # If an entity is offline (return False), the UI will refelect this.
-    @property
-    def available(self) -> bool:
-        """Return True if roller and hub is available."""
-        return self._device.online and self._device.hub.online
+        """Fetch the current state from the device."""
+        self._state = await self._device.get_relay_state(self._number)
 
     async def async_added_to_hass(self):
         """Run when this Entity has been added to HA."""
-        # Sensors should also register callbacks to HA when their state changes
-        self._device.register_callback(self.async_write_ha_state)
+        await super().async_added_to_hass()
+        # Restore the state if possible
+        if (restored_state := await self.async_get_last_state()) is not None:
+            self._state = restored_state.state == "on"
+        else:
+            # If no restored state, query the device for its current state
+            await self.async_update()
 
-    async def async_will_remove_from_hass(self):
-        """Entity being removed from hass."""
-        # The opposite of async_added_to_hass. Remove any registered call backs here.
-        self._device.remove_callback(self.async_write_ha_state)
+    @property
+    def should_poll(self) -> bool:
+        """Polling is not needed as we rely on callbacks."""
+        return False
+
+    @property
+    def available(self) -> bool:
+        """Return True if the device and hub are available."""
+        return self._device.online and self._device.hub.online
