@@ -21,6 +21,9 @@ async def async_setup_entry(hass: HomeAssistant, entry: HubConfigEntry) -> bool:
     # with your actual devices.
     entry.runtime_data = hub.Hub(hass, entry.data["host"])
 
+    if "name" not in entry.data:
+        entry.data["name"] = f"Automation Hat"
+
     # This creates each HA object for each platform your device requires.
     # It's done by calling the `async_setup_entry` function in each platform module.
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
