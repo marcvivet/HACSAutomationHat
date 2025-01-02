@@ -4,7 +4,7 @@ from homeassistant.components.switch import SwitchEntity
 
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
-from homeassistant.helpers.entity import RestoreEntity
+from homeassistant.helpers.restore_state import RestoreEntity
 
 import automationhat as ah
 
