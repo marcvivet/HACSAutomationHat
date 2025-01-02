@@ -1,6 +1,6 @@
-from asyncio import sleep, to_thread
+from asyncio import to_thread
 
-from homeassistant.components.button import ButtonEntity
+from homeassistant.components.switch import SwitchEntity
 
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
@@ -19,38 +19,58 @@ async def async_setup_entry(
     """Add sensors for passed config_entry in HA."""
     hub = config_entry.runtime_data
     async_add_entities([
-        RelayPush(hub.automationhat, "one"),
-        RelayPush(hub.automationhat, "two"),
-        RelayPush(hub.automationhat, "three")])
+        RelaySwitch(hub.automationhat, "one"),
+        RelaySwitch(hub.automationhat, "two"),
+        RelaySwitch(hub.automationhat, "three")])
 
 
-class RelayPush(ButtonEntity):
+class RelaySwitch(SwitchEntity):
     """Representation of a sensor."""
 
     def __init__(self, device, number) -> None:
         """Initialize the sensor."""
-        self._state = True
+        self._state = False
         self._device = device
         self._number = number
-        self._attr_unique_id = f"{self._device._id}_relay_{number}"
-        self._attr_name = f"Relay {number}"
+        self._attr_unique_id = f"{self._device._id}_switch_{number}"
+        self._attr_name = f"Switch {number}"
 
     @property
     def icon(self) -> str | None:
         """Icon of the entity."""
-        return "mdi:gesture-tap"
+        if self._state:
+            return "mdi:toggle-switch-variant"
+        return "mdi:toggle-switch-variant-off"
 
-    async def async_press(self) -> None:
-        """Press the button."""
+    @property
+    def is_on(self):
+        """Return is_on status."""
+        return self._state
+
+    async def async_turn_on(self):
+        """Turn On method."""
         relay = getattr(ah.relay, self._number)
+        self._state = True
         await self._device.set_relay_on(self._number)
         await to_thread(relay.on)
-        await sleep(1)
-        await to_thread(relay.off)
+
+    async def async_turn_off(self):
+        """Turn Off method."""
+        relay = getattr(ah.relay, self._number)
+        self._state = False
         await self._device.set_relay_off(self._number)
-        await sleep(1)
+        await to_thread(relay.off)
         await to_thread(relay.light_no.write, 1)
         await to_thread(relay.light_nc.write, 0)
+
+    @property
+    def should_poll(self):
+        """No polling needed."""
+        return False
+
+    async def async_update(self):
+        """Return sensor state."""
+        return self._state
 
     @property
     def name(self) -> str:
@@ -83,5 +103,3 @@ class RelayPush(ButtonEntity):
         """Entity being removed from hass."""
         # The opposite of async_added_to_hass. Remove any registered call backs here.
         self._device.remove_callback(self.async_write_ha_state)
-
-
