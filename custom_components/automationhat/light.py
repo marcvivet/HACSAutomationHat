@@ -35,7 +35,7 @@ class Light(LightEntity, RestoreEntity):
         self._state = None  # Use None to handle initial unknown state
         self._device = device
         self._number = number
-        self._attr_unique_id = f"{self._device._id}_switch_{number}"
+        self._attr_unique_id = f"{self._device.hat_id}_switch_{number}"
         self._attr_name = f"light {number}"
 
     @property

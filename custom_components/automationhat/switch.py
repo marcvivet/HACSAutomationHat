@@ -33,7 +33,7 @@ class RelaySwitch(SwitchEntity, RestoreEntity):
         self._state = None  # Use None to handle initial unknown state
         self._device = device
         self._number = number
-        self._attr_unique_id = f"{self._device._id}_switch_{number}"
+        self._attr_unique_id = f"{self._device.hat_id}_switch_{number}"
         self._attr_name = f"Relay {number}"
 
     @property

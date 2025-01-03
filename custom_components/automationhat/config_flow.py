@@ -46,11 +46,10 @@ async def validate_input(hass: HomeAssistant, data: dict) -> dict[str, Any]:
     # "Title" is what is displayed to the user for this hub device
     # It is stored internally in HA as part of the device config.
     # See `async_step_user` below for how this is used
-    return {"title": "automationhat_title"}
+    return {"title": "Automation Hat"}
 
 
 class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
-    """Handle a config flow for Hello World."""
 
     VERSION = 1
     # Pick one of the available connection classes in homeassistant/config_entries.py
