@@ -22,6 +22,5 @@ Pimoroni Automation HAT Home Assistant Integration can be installed via HACS, or
 
 3. Go to Settings / Integrations and add integration "Automation Hat".
 
-    [![Add Integration to your Home Assistant
-instance.](https://my.home-assistant.io/badges/config_flow_start.svg)](https://my.home-assistant.io/redirect/config_flow_start/?domain=automationhat)
+    [![Add Integration to your Home Assistant instance.](https://my.home-assistant.io/badges/config_flow_start.svg)](https://my.home-assistant.io/redirect/config_flow_start/?domain=automationhat)
 
