@@ -75,7 +75,7 @@ class AutomationHat:
 
     async def test_hat(self) -> bool:
         try:
-            await to_thread(ah.setup())
+            await to_thread(ah.setup)
         except Exception:
             return False
         return True
