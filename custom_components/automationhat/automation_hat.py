@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import asyncio
-from asyncio import sleep, to_thread
+from asyncio import to_thread
 import random
 from typing import Callable
 
@@ -75,7 +75,7 @@ class AutomationHat:
 
     async def test_hat(self) -> bool:
         try:
-            ah.setup()
+            await to_thread(ah.setup())
         except Exception:
             return False
         return True
