@@ -16,7 +16,7 @@ Pimoroni Automation HAT Home Assistant Integration can be installed via HACS, or
 
 1. Install this integration with HACS or copy the contents of this repository's `custom_components/automationhat` directory into your `custom_components/automationhat` directory.
 
-    [![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?repository=https%3A%2F%2Fgithub.com%2Fmarcvivet%2Fha_automation_hat.git&owner=marcvivet&category=integration)
+    [![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?repository=ha_automation_hat&owner=marcvivet&category=integration)
 
 2. Restart Home Assistant.
 
@@ -24,3 +24,4 @@ Pimoroni Automation HAT Home Assistant Integration can be installed via HACS, or
 
     [![Add Integration to your Home Assistant
 instance.](https://my.home-assistant.io/badges/config_flow_start.svg)](https://my.home-assistant.io/redirect/config_flow_start/?domain=automationhat)
+
