@@ -1,20 +1,19 @@
 {
-    "config": {
-      "step": {
-        "user": {
-          "data": {
-            "push_interval": "Push Interval (defaults to 1 second)"
-          }
+  "config": {
+    "step": {
+      "user": {
+        "data": {
+          "push_interval": "Interval de pulsació (per defecte 1 segon)"
         }
-      },
-      "error": {
-        "automation_hat_not_present": "We cannot find an automation hat installed!",
-        "invalit_parameters": "Invalid parameters.",
-        "unknown": "Unknown Error."
-      },
-      "abort": {
-        "already_configured": "Device alredy configured."
       }
+    },
+    "error": {
+      "automation_hat_not_present": "No podem trobar un automation hat instal·lat!",
+      "invalit_parameters": "Paràmetres no vàlids.",
+      "unknown": "Error desconegut."
+    },
+    "abort": {
+      "already_configured": "Dispositiu ja configurat."
     }
   }
-  
+}
