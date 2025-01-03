@@ -36,7 +36,12 @@ class Light(LightEntity, RestoreEntity):
         self._device = device
         self._number = number
         self._attr_unique_id = f"{self._device.hat_id}_switch_{number}"
+        self._entity_id = f"light.{self._device.hat_id}_relay_{number}"
         self._attr_name = f"light {number}"
+
+    @property
+    def entity_id(self) -> str:
+        return self._entity_id
 
     @property
     def color_mode(self) -> ColorMode | str | None:

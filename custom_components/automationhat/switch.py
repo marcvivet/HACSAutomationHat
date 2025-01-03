@@ -34,7 +34,12 @@ class RelaySwitch(SwitchEntity, RestoreEntity):
         self._device = device
         self._number = number
         self._attr_unique_id = f"{self._device.hat_id}_switch_{number}"
+        self._entity_id = f"switch.{self._device.hat_id}_relay_{number}"
         self._attr_name = f"Relay {number}"
+
+    @property
+    def entity_id(self) -> str:
+        return self._entity_id
 
     @property
     def icon(self) -> str | None:
