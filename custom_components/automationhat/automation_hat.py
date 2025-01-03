@@ -74,17 +74,10 @@ class AutomationHat:
         return self._id
 
     async def test_hat(self) -> bool:
-        for number in ["one", "two", "three"]:
-            try:
-                relay = getattr(ah.relay, number)
-                await to_thread(relay.on)
-                await sleep(0.5)
-                await to_thread(relay.off)
-                await sleep(0.5)
-                await to_thread(relay.light_no.write, 0)
-                await to_thread(relay.light_nc.write, 0)
-            except Exception:
-                return False
+        try:
+            ah.setup()
+        except Exception:
+            return False
         return True
 
     async def set_relay_on(self, number) -> None:
