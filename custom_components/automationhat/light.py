@@ -1,10 +1,12 @@
 from asyncio import to_thread
 
-from homeassistant.components.switch import SwitchEntity
+from homeassistant.components.light import LightEntity
 
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.restore_state import RestoreEntity
+
+from homeassistant.components.light import ColorMode
 
 import automationhat as ah
 
@@ -20,13 +22,13 @@ async def async_setup_entry(
     """Add sensors for passed config_entry in HA."""
     hat = config_entry.runtime_data
     async_add_entities([
-        RelaySwitch(hat, "one"),
-        RelaySwitch(hat, "two"),
-        RelaySwitch(hat, "three")])
+        Light(hat, "power"),
+        Light(hat, "comms"),
+        Light(hat, "warn")])
 
 
-class RelaySwitch(SwitchEntity, RestoreEntity):
-    """Representation of a relay switch."""
+class Light(LightEntity, RestoreEntity):
+    """Representation of a light switch."""
 
     def __init__(self, device, number) -> None:
         """Initialize the switch."""
@@ -34,12 +36,16 @@ class RelaySwitch(SwitchEntity, RestoreEntity):
         self._device = device
         self._number = number
         self._attr_unique_id = f"{self._device._id}_switch_{number}"
-        self._attr_name = f"Relay {number}"
+        self._attr_name = f"light {number}"
+
+    @property
+    def color_mode(self) -> ColorMode | str | None:
+        return ColorMode.ONOFF
 
     @property
     def icon(self) -> str | None:
         """Icon of the entity."""
-        return "mdi:toggle-switch-variant" if self.is_on else "mdi:toggle-switch-variant-off"
+        return "mdi:led-on" if self.is_on else "mdi:led-off"
 
     @property
     def is_on(self):
@@ -48,25 +54,23 @@ class RelaySwitch(SwitchEntity, RestoreEntity):
 
     async def async_turn_on(self):
         """Turn the switch on."""
-        relay = getattr(ah.relay, self._number)
-        await self._device.set_relay_on(self._number)
-        await to_thread(relay.on)
+        light = getattr(ah.light, self._number)
+        await self._device.set_light_on(self._number)
+        await to_thread(light.on)
         self._state = True
         self.async_write_ha_state()
 
     async def async_turn_off(self):
         """Turn the switch off."""
-        relay = getattr(ah.relay, self._number)
-        await self._device.set_relay_off(self._number)
-        await to_thread(relay.off)
-        await to_thread(relay.light_no.write, 0)
-        await to_thread(relay.light_nc.write, 0)
+        light = getattr(ah.light, self._number)
+        await self._device.set_light_off(self._number)
+        await to_thread(light.off)
         self._state = False
         self.async_write_ha_state()
 
     async def async_update(self):
         """Fetch the current state from the device."""
-        self._state = await self._device.get_relay_state(self._number)
+        self._state = await self._device.get_light_state(self._number)
 
     async def async_added_to_hass(self):
         """Run when this Entity has been added to HA."""

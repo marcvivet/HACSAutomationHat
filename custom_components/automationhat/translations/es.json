@@ -1,0 +1,19 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "data": {
+          "push_interval": "Intervalo de pulsación (por defecto 1 segundo)"
+        }
+      }
+    },
+    "error": {
+      "automation_hat_not_present": "¡No podemos encontrar un automation hat instalado!",
+      "invalit_parameters": "Parámetros no válidos.",
+      "unknown": "Error desconocido."
+    },
+    "abort": {
+      "already_configured": "Dispositivo ya configurado."
+    }
+  }
+}

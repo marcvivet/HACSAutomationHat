@@ -3,15 +3,13 @@
     "step": {
       "user": {
         "data": {
-          "host": "[%key:common::config_flow::data::host%]",
-          "username": "[%key:common::config_flow::data::username%]",
-          "password": "[%key:common::config_flow::data::password%]"
+          "push_interval": "[%key:common::config_flow::data::push_interval%]"
         }
       }
     },
     "error": {
-      "cannot_connect": "[%key:common::config_flow::error::cannot_connect%]",
-      "invalid_auth": "[%key:common::config_flow::error::invalid_auth%]",
+      "automation_hat_not_present": "[%key:common::config_flow::error::automation_hat_not_present%]",
+      "invalit_parameters": "[%key:common::config_flow::error::invalit_parameters%]",
       "unknown": "[%key:common::config_flow::error::unknown%]"
     },
     "abort": {
